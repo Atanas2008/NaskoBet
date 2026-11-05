@@ -1,4 +1,19 @@
 :root { --cell: min(15vw, 17vh, 120px); --gold: #f5c542; --accent: #f5c542; --frame1: #f5c542; --frame2: #9a6b0f; }
+
+.naskobet-logo {
+  font-size: 2.6rem; font-weight: 900; letter-spacing: 4px; color: var(--accent);
+  text-shadow: 0 0 24px #f5c54299, 0 2px 0 #9a6b0f;
+  margin: 10px 0 2px; text-transform: uppercase;
+}
+.naskobet-watermark {
+  position: fixed; bottom: 18px; right: 18px; z-index: 0; pointer-events: none;
+  font-size: 1.1rem; font-weight: 900; letter-spacing: 3px; color: #f5c54222;
+  text-transform: uppercase; user-select: none;
+}
+.naskobet-tag {
+  font-size: .75rem; font-weight: 900; letter-spacing: 2px; color: var(--accent);
+  opacity: .7; text-transform: uppercase; vertical-align: middle; margin: 0 8px;
+}
 * { box-sizing: border-box; }
 body {
   margin: 0; min-height: 100vh; overflow-x: hidden; color: #fff; font-family: "Segoe UI", system-ui, sans-serif;

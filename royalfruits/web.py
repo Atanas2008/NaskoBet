@@ -101,13 +101,27 @@ class Handler(BaseHTTPRequestHandler):
             self._send(400, {"error": str(e) or "invalid request"})
 
 
+def _local_ip():
+    import socket
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("8.8.8.8", 80))
+            return s.getsockname()[0]
+    except Exception:
+        return None
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--host", default="127.0.0.1")
+    ap.add_argument("--host", default="0.0.0.0")
     ap.add_argument("--port", type=int, default=8000)
     a = ap.parse_args()
     srv = ThreadingHTTPServer((a.host, a.port), Handler)
-    print(f"Casino running at http://{a.host}:{a.port}  (Ctrl+C to stop)")
+    ip = _local_ip()
+    print(f"Casino running at http://localhost:{a.port}")
+    if ip:
+        print(f"Phone (same Wi-Fi): http://{ip}:{a.port}")
+    print("Ctrl+C to stop")
     try:
         srv.serve_forever()
     except KeyboardInterrupt:

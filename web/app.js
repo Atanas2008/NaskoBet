@@ -93,6 +93,19 @@ function renderBonusBar(b = BONUS ? st.bonus : null) {
 
 function say(html) { $("message").innerHTML = html; }
 
+async function checkBankrupt() {
+  if (Number(st.balance) + Number(st.pending) > 0) return;
+  busy = true;
+  render();
+  say('<span class="big">golem si glupak</span>');
+  await sleep(2500);
+  await fetch("/api/reset", { method: "POST" });
+  st = await api("/state");
+  busy = false;
+  render();
+  say("Баланс ресетнат на 1000.00");
+}
+
 async function showBanner(text) {
   const b = $("banner");
   b.textContent = text;
@@ -135,7 +148,7 @@ async function animateResult(r) {
 async function spin() {
   if (busy || hasBonus()) return;
   const bet = st.bet_levels[betIdx], total = bet * st.num_lines;
-  if (Number(st.balance) + Number(st.pending) < total) { say("Недостатъчен баланс"); return; }
+  if (Number(st.balance) + Number(st.pending) < total) { say("Недостатъчен баланс"); await checkBankrupt(); return; }
   busy = true;
   const before = st;
   st = { ...before, pending: "0", can_gamble: false };
@@ -169,6 +182,7 @@ async function spin() {
   }
   busy = false;
   render();
+  await checkBankrupt();
 }
 
 // ---- free spins (Royal Cats) -------------------------------------------------------------
@@ -277,6 +291,7 @@ async function pick(color) {
   } catch (e) { say(e.message); }
   busy = false;
   render();
+  await checkBankrupt();
 }
 
 async function collect() {
@@ -285,6 +300,7 @@ async function collect() {
   hideOverlay();
   clearHighlights();
   render();
+  await checkBankrupt();
 }
 
 async function init() {
@@ -319,6 +335,7 @@ async function init() {
     if (e.code === "Space") { e.preventDefault(); spin(); }
   });
   render();
+  await checkBankrupt();
   // A reload mid-bonus resumes it; a finished bonus shows its summary again.
   if (hasBonus()) {
     if (bonusRunning()) { say("Бонусът продължава"); showIntro(st.bonus.spins_left, "ПРОДЪЛЖИ"); }

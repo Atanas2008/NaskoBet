@@ -1,4 +1,14 @@
 :root { --gold: #f5c542; --card: #1b1535; --border: #3d3270; --brown: #7a5230; }
+
+.naskobet-watermark {
+  position: fixed; bottom: 18px; right: 18px; z-index: 0; pointer-events: none;
+  font-size: 1.1rem; font-weight: 900; letter-spacing: 3px; color: #f5c54222;
+  text-transform: uppercase; user-select: none;
+}
+.naskobet-tag {
+  font-size: .75rem; font-weight: 900; letter-spacing: 2px; color: var(--gold);
+  opacity: .7; text-transform: uppercase; vertical-align: middle; margin: 0 8px;
+}
 * { box-sizing: border-box; }
 body.miner { margin: 0; min-height: 100vh; color: #fff; font-family: "Segoe UI", system-ui, sans-serif;
   background: radial-gradient(circle at 30% 0%, #251a45 0%, #120d26 60%, #0a0716 100%); }
