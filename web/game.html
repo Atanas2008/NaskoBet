@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Слот</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main>
+  <a class="back" href="/">← Лоби</a>
+  <h1 id="title"></h1>
+
+  <section id="jackpots">
+    <div class="jp" data-level="SPADES"><span>♠</span><b>0.00</b></div>
+    <div class="jp" data-level="HEARTS"><span>♥</span><b>0.00</b></div>
+    <div class="jp" data-level="DIAMONDS"><span>♦</span><b>0.00</b></div>
+    <div class="jp" data-level="CLUBS"><span>♣</span><b>0.00</b></div>
+  </section>
+
+  <section id="machine">
+    <div id="reels"></div>
+    <div id="banner" hidden></div>
+    <div id="retrigger" hidden></div>
+  </section>
+
+  <section id="bonus-bar" hidden>
+    <div class="box"><label>Безплатни</label><b id="fs-counter">0 / 0</b></div>
+    <div class="multiplier-badge" id="fs-mult">x3</div>
+    <div class="box"><label>Бонус печалба</label><b id="fs-total">0.00</b></div>
+    <button id="fs-pause">ПАУЗА</button>
+  </section>
+
+  <div id="message">Натисни ВЪРТИ</div>
+
+  <section id="gamble" hidden>
+    <span>Удвои <b id="gamble-amount"></b>?</span>
+    <button class="red" data-color="red">ЧЕРВЕНО</button>
+    <button class="black" data-color="black">ЧЕРНО</button>
+    <button id="collect">ВЗЕМИ</button>
+  </section>
+
+  <section id="panel">
+    <div class="box"><label>Баланс</label><b id="balance">0.00</b></div>
+    <div class="box"><label>Печалба</label><b id="win">0.00</b></div>
+    <div class="box bet">
+      <label>Залог на линия</label>
+      <div><button id="bet-down">−</button><b id="bet">1</b><button id="bet-up">+</button></div>
+      <small>Общо: <span id="total-bet">10.00</span></small>
+    </div>
+    <button id="spin">ВЪРТИ</button>
+  </section>
+  <p class="hint">Интервал = върти · Игра с въображаеми пари</p>
+</main>
+
+<div id="overlay" class="overlay" hidden>
+  <div class="dialog">
+    <div id="ov-title"></div>
+    <div id="ov-amount"></div>
+    <div id="ov-sub"></div>
+    <div class="ov-buttons">
+      <button id="ov-start">СТАРТ</button>
+      <button class="red" id="ov-red" data-color="red">ЧЕРВЕНО</button>
+      <button class="black" id="ov-black" data-color="black">ЧЕРНО</button>
+      <button id="ov-collect">ВЗЕМИ</button>
+    </div>
+  </div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

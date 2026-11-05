@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from decimal import Decimal
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "game.json"
 
@@ -27,6 +27,24 @@ def load_raw(path=DEFAULT_CONFIG_PATH) -> dict:
 
 
 @dataclass(frozen=True)
+class FreeSpinSettings:
+    """Free-spins bonus: a derived Config (same symbols, freeSpinReels strips, freeSpinPaytable) plus the rules."""
+    config: "Config"
+    awards: Dict[int, int]            # scatter-B count -> free spins (trigger)
+    retrigger_awards: Dict[int, int]  # scatter-B count during free spins -> extra spins
+    multiplier: Decimal
+    max_total_spins: int
+    auto_delay_ms: int
+    gamble_steps: int                 # gamble steps allowed on the total bonus win
+    gamble_max_amount: Optional[Decimal] = None   # largest bonus total that may be gambled (None = gamble.max_amount)
+
+    @staticmethod
+    def award_for(table: Dict[int, int], count: int) -> int:
+        usable = [k for k in table if k <= count]
+        return table[max(usable)] if usable else 0
+
+
+@dataclass(frozen=True)
 class Config:
     raw: dict
     reels: int
@@ -35,7 +53,7 @@ class Config:
     max_win_multiplier: Decimal
     line_symbols: Tuple[str, ...]
     wild: str
-    scatter_a: str
+    scatter_a: Optional[str]          # optional second scatter (None = game has only scatter B)
     scatter_b: str
     wild_reels: Tuple[int, ...]       # zero-based reel indices
     scatter_a_reels: Tuple[int, ...]  # zero-based reel indices
@@ -46,6 +64,7 @@ class Config:
     strips: Tuple[Tuple[str, ...], ...]
     gamble: dict
     jackpot: dict
+    free_spins: Optional[FreeSpinSettings] = None   # None = the game has no bonus
 
     @property
     def num_lines(self) -> int:
@@ -54,6 +73,29 @@ class Config:
     @staticmethod
     def load(path=DEFAULT_CONFIG_PATH) -> "Config":
         return Config.from_dict(load_raw(path))
+
+    @staticmethod
+    def _build_free_spins(d: dict) -> Optional[FreeSpinSettings]:
+        if "freeSpinReels" not in d:
+            return None
+        derived = {k: v for k, v in d.items()
+                   if k not in ("freeSpinReels", "freeSpinPaytable", "freeSpinSettings", "jackpot", "gamble")}
+        derived["reel_strips"] = d["freeSpinReels"]
+        pay = dict(d["paytable"])
+        pay["line"] = d["freeSpinPaytable"]["line"]
+        pay["scatter_b"] = d["freeSpinPaytable"]["scatter_b"]
+        derived["paytable"] = pay
+        st = d["freeSpinSettings"]
+        awards = {int(k): int(v) for k, v in st["awards"].items()}
+        retrig = {int(k): int(v) for k, v in st.get("retriggerAwards", st["awards"]).items()}
+        fs = FreeSpinSettings(
+            config=Config.from_dict(derived), awards=awards, retrigger_awards=retrig,
+            multiplier=Decimal(str(st["multiplier"])), max_total_spins=int(st["maxTotalSpins"]),
+            auto_delay_ms=int(st.get("autoDelayMs", 1200)), gamble_steps=int(st.get("bonusGambleSteps", 1)),
+            gamble_max_amount=(Decimal(str(st["bonusGambleMaxAmount"])) if "bonusGambleMaxAmount" in st else None))
+        if fs.multiplier < 1 or fs.max_total_spins < max(awards.values()):
+            raise ConfigError("invalid freeSpinSettings (multiplier >= 1, maxTotalSpins >= largest award)")
+        return fs
 
     @staticmethod
     def from_dict(raw: dict) -> "Config":
@@ -69,18 +111,19 @@ class Config:
                 max_win_multiplier=Decimal(str(d["max_win_multiplier"])),
                 line_symbols=tuple(sym["line"]),
                 wild=sym["wild"],
-                scatter_a=sym["scatter_a"],
+                scatter_a=sym.get("scatter_a"),
                 scatter_b=sym["scatter_b"],
                 wild_reels=tuple(r - 1 for r in d["wild_reels"]),
-                scatter_a_reels=tuple(r - 1 for r in d["scatter_a_reels"]),
+                scatter_a_reels=tuple(r - 1 for r in d.get("scatter_a_reels", [])),
                 paylines=tuple(tuple(l) for l in d["paylines"]),
                 line_pay={s: {int(k): Decimal(str(v)) for k, v in t.items()}
                           for s, t in pay["line"].items()},
-                scatter_a_pay={int(k): Decimal(str(v)) for k, v in pay["scatter_a"].items()},
+                scatter_a_pay={int(k): Decimal(str(v)) for k, v in pay.get("scatter_a", {}).items()},
                 scatter_b_pay={int(k): Decimal(str(v)) for k, v in pay["scatter_b"].items()},
                 strips=tuple(tuple(s) for s in d["reel_strips"]),
                 gamble=d.get("gamble", {}),
                 jackpot=d.get("jackpot", {}),
+                free_spins=Config._build_free_spins(d),
             )
         except KeyError as exc:
             raise ConfigError(f"missing config key: {exc}") from exc

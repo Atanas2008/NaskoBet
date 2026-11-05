@@ -3,20 +3,30 @@
  "title": "Royal Fruits config",
  "type": "object",
  "required": ["reels", "rows", "bet_levels", "max_win_multiplier", "symbols", "wild_reels",
-              "scatter_a_reels", "paylines", "paytable", "reel_strips"],
+             "paylines", "paytable", "reel_strips"],
  "properties": {
   "reels": {"const": 5}, "rows": {"const": 3},
   "bet_levels": {"type": "array", "items": {"type": "number"}},
   "max_win_multiplier": {"type": "number"},
   "strip_length_limits": {"type": "object", "properties": {"min": {"type": "integer"}, "max": {"type": "integer"}}},
-  "symbols": {"type": "object", "required": ["line", "wild", "scatter_a", "scatter_b"]},
+  "symbols": {"type": "object", "required": ["line", "wild", "scatter_b"]},
   "wild_reels": {"type": "array", "items": {"type": "integer", "minimum": 1, "maximum": 5}},
   "scatter_a_reels": {"type": "array", "items": {"type": "integer", "minimum": 1, "maximum": 5}},
   "paylines": {"type": "array", "minItems": 10, "maxItems": 10,
                "items": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "integer", "minimum": 0, "maximum": 2}}},
-  "paytable": {"type": "object", "required": ["line", "scatter_a", "scatter_b"]},
+  "paytable": {"type": "object", "required": ["line", "scatter_b"]},
   "reel_strips": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "array", "items": {"type": "string"}}},
   "gamble": {"type": "object"},
-  "jackpot": {"type": "object"}
- }
+  "jackpot": {"type": "object"},
+  "freeSpinReels": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "array", "items": {"type": "string"}}},
+  "freeSpinPaytable": {"type": "object", "required": ["line", "scatter_b"]},
+  "freeSpinSettings": {"type": "object", "required": ["awards", "multiplier", "maxTotalSpins"],
+                       "properties": {"awards": {"type": "object"}, "retriggerAwards": {"type": "object"},
+                                      "multiplier": {"type": "number", "minimum": 1},
+                                      "maxTotalSpins": {"type": "integer", "minimum": 1},
+                                      "autoDelayMs": {"type": "integer", "minimum": 0},
+                                      "bonusGambleSteps": {"type": "integer", "minimum": 0},
+                                      "bonusGambleMaxAmount": {"type": "number", "minimum": 0}}}
+ },
+ "dependencies": {"freeSpinReels": ["freeSpinPaytable", "freeSpinSettings"]}
 }

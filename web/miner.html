@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Miner</title>
+<link rel="stylesheet" href="/miner.css">
+</head>
+<body class="miner">
+<main>
+  <header class="top">
+    <a class="back" href="/">← Лоби</a>
+    <h1 id="title">DEEP MINER</h1>
+    <span id="depth-head" class="depth-head">Дълбочина 0 м</span>
+    <button id="speed" class="small" title="Ускоряване">⏩ ×1</button>
+  </header>
+
+  <div class="layout">
+    <section class="mine-wrap">
+      <div id="shake" class="shake">
+        <canvas id="mine" width="522" height="638"></canvas>
+        <div id="draw" class="draw" hidden>
+          <div class="draw-title">ТЕГЛЕНЕ НА КИРКА</div>
+          <div class="draw-window"><div id="draw-strip" class="draw-strip"></div><div class="draw-marker"></div></div>
+          <div id="draw-result" class="draw-result"></div>
+        </div>
+        <div id="banner" class="banner" hidden></div>
+        <div id="summary" class="summary" hidden>
+          <div class="sum-title" id="sum-title">РУНДЪТ ПРИКЛЮЧИ</div>
+          <div class="sum-reason" id="sum-reason"></div>
+          <div class="sum-win" id="sum-win">0.00</div>
+          <div class="sum-stats" id="sum-stats"></div>
+          <button id="sum-ok">ПРОДЪЛЖИ</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="card pick-card">
+        <div class="pick-icon" id="pick-icon"><img id="pick-img" alt="" draggable="false"></div>
+        <div class="pick-info">
+          <div class="pick-name" id="pick-name">ГОТОВ ЗА КОПАНЕ</div>
+          <div class="pick-tier" id="pick-tier">Ниво – / 6</div>
+          <div class="label">ИЗДРЪЖЛИВОСТ</div>
+          <div class="dur-bar"><div id="dur-fill" class="dur-fill"></div></div>
+          <div class="dur-num" id="dur-num">0 / 0</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="label">ПОДОБРЕНИЯ</div>
+        <div class="path" id="path"></div>
+      </div>
+
+      <div class="row2">
+        <div class="card"><div class="label">ПЕЧАЛБА В РУНДА</div><div class="big gold" id="round-win">0.00</div></div>
+        <div class="card"><div class="label">ДЪЛБОЧИНА</div><div class="big" id="depth">0 / 60 м</div></div>
+      </div>
+
+      <div class="card">
+        <div class="label">РУДИ (х залога)</div>
+        <div class="ores" id="ores"></div>
+      </div>
+
+      <div class="row3">
+        <div class="card"><div class="label">БАЛАНС</div><div class="big" id="balance">0.00</div></div>
+        <div class="card bet-card">
+          <div class="label">ЗАЛОГ</div>
+          <div class="bet-row"><button id="bet-down" class="small">−</button><span class="big" id="bet">1.00</span><button id="bet-up" class="small">+</button></div>
+        </div>
+        <button id="dig">КОПАЙ</button>
+      </div>
+      <div id="message" class="message"></div>
+    </aside>
+  </div>
+</main>
+<script src="/miner.js"></script>
+</body>
+</html>

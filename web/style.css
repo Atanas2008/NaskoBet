@@ -1,0 +1,119 @@
+:root { --cell: min(15vw, 17vh, 120px); --gold: #f5c542; --accent: #f5c542; --frame1: #f5c542; --frame2: #9a6b0f; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; overflow-x: hidden; color: #fff; font-family: "Segoe UI", system-ui, sans-serif;
+  background: radial-gradient(circle at 50% 0%, #3b1f6e 0%, #150d2b 60%, #0a0618 100%);
+}
+main { max-width: 760px; margin: 0 auto; padding: 16px; text-align: center; }
+h1 { margin: 8px 0; font-size: 2.2rem; letter-spacing: 3px; color: var(--accent); text-shadow: 0 0 18px #f5c54288; }
+.back { float: left; color: #ccc; text-decoration: none; font-size: .9rem; padding: 6px 0; }
+.back:hover { color: #fff; }
+
+#jackpots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; clear: both; }
+.jp { background: #00000066; border: 1px solid var(--bd, #f5c54255); border-radius: 10px; padding: 6px; }
+.jp span { font-size: 1.3rem; margin-right: 6px; }
+.jp[data-level="HEARTS"] span, .jp[data-level="DIAMONDS"] span { color: #ff4b5c; }
+.jp b { color: var(--accent); }
+.jp.hit { animation: pulse .5s 6; }
+
+#machine { position: relative; display: inline-block; padding: 10px; border-radius: 18px;
+  background: linear-gradient(var(--frame1), var(--frame2)); box-shadow: 0 0 30px var(--glow, #f5c54255); }
+#reels { display: flex; gap: 6px; background: #0b0720; border-radius: 10px; padding: 6px; }
+.reel { width: var(--cell); height: calc(var(--cell) * 3); overflow: hidden; position: relative;
+  background: linear-gradient(#1b1240, #120b2e); border-radius: 6px; }
+.strip { will-change: transform; }
+.cell { width: var(--cell); height: var(--cell); padding: 8%; display: flex; align-items: center; justify-content: center; }
+.cell img { width: 100%; height: 100%; object-fit: contain; }
+.reel.spinning .strip { filter: blur(2px); }
+.cell.win { animation: pulse .6s infinite; background: #f5c54233; box-shadow: inset 0 0 0 2px var(--accent); border-radius: 8px; }
+.reel.expanding { animation: flash .6s; }
+
+#banner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: #000000bb; font-size: 1.8rem; font-weight: 800; color: var(--accent); border-radius: 18px; }
+#banner[hidden] { display: none; }
+
+#message { min-height: 2.6em; margin: 12px 0; color: #ddd; }
+#message .big { color: var(--accent); font-size: 1.5rem; font-weight: 800; }
+
+#gamble { display: flex; gap: 10px; align-items: center; justify-content: center; margin-bottom: 10px; }
+#gamble[hidden] { display: none; }
+
+button { font: inherit; font-weight: 700; border: 0; border-radius: 10px; padding: 10px 16px; cursor: pointer;
+  color: #1b1240; background: var(--accent); }
+button:hover:not(:disabled) { filter: brightness(1.15); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.red { background: #d62839; color: #fff; }
+button.black { background: #222; color: #fff; }
+
+#panel { display: flex; gap: 10px; align-items: stretch; justify-content: center; flex-wrap: wrap; }
+.box { background: #00000066; border: 1px solid var(--bd, #f5c54255); border-radius: 12px; padding: 8px 16px; min-width: 120px; }
+.box label { display: block; font-size: .75rem; color: #bbb; text-transform: uppercase; }
+.box b { font-size: 1.4rem; color: var(--accent); }
+.bet div { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.bet button { padding: 2px 12px; font-size: 1.2rem; }
+small { color: #bbb; }
+#spin { font-size: 1.5rem; padding: 0 36px; min-height: 64px; }
+.hint { color: #888; font-size: .8rem; }
+
+@keyframes pulse { 50% { transform: scale(1.08); filter: brightness(1.4); } }
+@keyframes flash { 0% { filter: brightness(3); } 100% { filter: none; } }
+
+/* ---- lobby ---- */
+.lobby-balance { display: inline-block; margin: 8px 0 20px; }
+.games { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+.game-card { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 280px; padding: 24px 16px;
+  border-radius: 20px; text-decoration: none; color: #fff; transition: transform .2s, box-shadow .2s;
+  background: linear-gradient(#2a1650, #150d2b); border: 2px solid #f5c542; box-shadow: 0 0 24px #f5c54233; }
+.game-card.cats { border-color: #ff7ac8; box-shadow: 0 0 24px #ff7ac833;
+  background: linear-gradient(#4a1850, #1f0a30); }
+.game-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 0 40px #f5c54288; }
+.game-card.cats:hover { box-shadow: 0 0 40px #ff7ac8aa; }
+.game-card img { width: 140px; height: 140px; }
+.game-name { font-size: 1.6rem; font-weight: 800; color: #f5c542; letter-spacing: 1px; }
+.game-card.cats .game-name { color: #ff9ad5; }
+.play { background: #f5c542; color: #1b1240; font-weight: 700; padding: 8px 18px; border-radius: 10px; }
+.game-card.cats .play { background: #ff7ac8; }
+
+.game-card.miner { border-color: #c8a165; box-shadow: 0 0 24px #c8a16533; background: linear-gradient(#3a2a1a, #1a120c); }
+.game-card.miner img { image-rendering: pixelated; }
+.game-card.miner:hover { box-shadow: 0 0 40px #c8a165aa; }
+.game-card.miner .game-name { color: #e8c07a; font-family: "Courier New", monospace; letter-spacing: 3px; }
+.game-card.miner .play { background: #c8961f; }
+
+/* ---- Royal Cats theme ---- */
+body.cats { --accent: #ff9ad5; --frame1: #ff7ac8; --frame2: #7a2cc8; --glow: #ff5fa8bb; --bd: #ff7ac855;
+  background: radial-gradient(circle at 50% 0%, #6a1f6e 0%, #2b0d3a 60%, #12061f 100%); }
+body.cats::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .09;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><g fill='%23ff7ac8'><ellipse cx='60' cy='78' rx='15' ry='12'/><ellipse cx='42' cy='58' rx='5' ry='7'/><ellipse cx='54' cy='50' rx='5' ry='7'/><ellipse cx='66' cy='50' rx='5' ry='7'/><ellipse cx='78' cy='58' rx='5' ry='7'/></g></svg>");
+  background-size: 120px 120px; }
+body.cats h1 { text-shadow: 0 0 22px #ff5fa8aa; }
+body.cats #machine { box-shadow: 0 0 40px #ff5fa8bb, 0 0 80px #a23cff66; }
+body.cats .cell.win { background: #ff7ac833; }
+body.cats .reel { background: linear-gradient(#2a1242, #1a0a2e); }
+
+/* ---- Royal Cats free spins ---- */
+#bonus-bar { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 4px 0 10px; }
+#bonus-bar[hidden], .overlay[hidden], #retrigger[hidden] { display: none; }
+.multiplier-badge { font-size: 1.8rem; font-weight: 900; color: #fff; padding: 6px 16px; border-radius: 999px;
+  background: linear-gradient(#ff5fa8, #a23cff); box-shadow: 0 0 18px #ff5fa8aa; }
+.overlay { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center;
+  background: #0a0618cc; backdrop-filter: blur(3px); }
+.dialog { background: linear-gradient(#4a1850, #1f0a30); border: 2px solid #ff7ac8; border-radius: 20px; text-align: center;
+  padding: 28px 36px; max-width: 92vw; box-shadow: 0 0 40px #ff7ac877; animation: pop .4s; }
+#ov-title { font-size: 1.6rem; font-weight: 900; color: #ff9ad5; letter-spacing: 1px; }
+#ov-amount { font-size: 2.6rem; font-weight: 900; margin: 10px 0; }
+#ov-sub { color: #ccc; margin-bottom: 14px; min-height: 1.2em; }
+.ov-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.ov-buttons button[hidden] { display: none; }
+#ov-start { font-size: 1.4rem; padding: 12px 40px; }
+#retrigger { position: absolute; left: 50%; top: 50%; z-index: 5; transform: translate(-50%, -50%); pointer-events: none;
+  font-size: 2.4rem; font-weight: 900; color: #fff; white-space: nowrap; padding: 8px 24px; border-radius: 16px;
+  background: linear-gradient(#ff5fa8, #a23cff); box-shadow: 0 0 30px #ff5fa8; animation: retrig 2s forwards; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+@keyframes retrig { 0% { transform: translate(-50%, -30%) scale(.3); opacity: 0; } 20% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  80% { transform: translate(-50%, -60%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -90%) scale(1); opacity: 0; } }
+/* pink glow on the reel frame while the bonus runs */
+body.bonus-active #machine { animation: bonusglow 1.6s ease-in-out infinite;
+  background: linear-gradient(#ff5fa8, #a23cff); }
+@keyframes bonusglow { 0%, 100% { box-shadow: 0 0 40px #ff5fa8bb, 0 0 80px #a23cff66; }
+  50% { box-shadow: 0 0 70px #ff5fa8, 0 0 140px #a23cffaa; } }

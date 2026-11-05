@@ -1,0 +1,32 @@
+{
+ "_comment": "Deep Miner configuration. Keys starting with '_' are ignored by the loader. Probabilities are per cell; draw weights are percentages.",
+ "title": "Deep Miner",
+ "width": 9,
+ "depth": 60,
+ "bet_levels": [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100],
+ "max_win_multiplier": 5000,
+ "bottom_bonus": 100,
+ "_draw": "Pickaxe draw weights in percent (must sum to 100). NONE = no pickaxe, round ends with 0 win and no mine is generated.",
+ "draw": {"NONE": 40, "WOOD": 31, "STONE": 15, "IRON": 9, "GOLD": 3.6, "DIAMOND": 1.2, "VOID": 0.2},
+ "pickaxes": [
+  {"id": "WOOD", "name": "ДЪРВЕНА КИРКА", "durability": 10, "ore_multiplier": 1, "breaks_bedrock": false},
+  {"id": "STONE", "name": "КАМЕННА КИРКА", "durability": 20, "ore_multiplier": 1, "breaks_bedrock": false},
+  {"id": "IRON", "name": "ЖЕЛЯЗНА КИРКА", "durability": 35, "ore_multiplier": 1, "breaks_bedrock": false},
+  {"id": "GOLD", "name": "ЗЛАТНА КИРКА", "durability": 25, "ore_multiplier": 2, "breaks_bedrock": false},
+  {"id": "DIAMOND", "name": "ДИАМАНТЕНА КИРКА", "durability": 45, "ore_multiplier": 1, "breaks_bedrock": false},
+  {"id": "VOID", "name": "КИРКА ОТ БЕЗДНАТА", "durability": 85, "ore_multiplier": 3, "breaks_bedrock": true}
+ ],
+ "_layers": "Rows are zero-based and inclusive; they must cover 0..depth-1 without gaps. hardness = durability cost of one block (an ore costs its host layer's hardness). ores = probability per cell.",
+ "layers": [
+  {"name": "grass", "rows": [0, 0], "block": "grass", "hardness": 1, "ores": {}},
+  {"name": "dirt", "rows": [1, 1], "block": "dirt", "hardness": 1, "ores": {}},
+  {"name": "stone", "rows": [2, 24], "block": "stone", "hardness": 1, "ores": {"coal": 0.0425, "iron": 0.0273, "gold": 0.0106}},
+  {"name": "deepstone", "rows": [25, 49], "block": "deepstone", "hardness": 2, "ores": {"gold": 0.0101, "emerald": 0.0101, "diamond": 0.0051}},
+  {"name": "voidstone", "rows": [50, 59], "block": "voidstone", "hardness": 3, "ores": {"diamond": 0.0172, "voidcrystal": 0.0086}}
+ ],
+ "ore_pay": {"coal": 0.1, "iron": 0.3, "gold": 1, "emerald": 3, "diamond": 10, "voidcrystal": 50},
+ "crafting_table": {"rows_per": 12, "min_row": 2},
+ "tnt": {"rows_per": 10, "min_row": 2, "radius": 1, "destroys_bedrock": false},
+ "_bedrock": "Cells placed per layer; at most max_per_row in one row so a row is never fully blocked.",
+ "bedrock": {"per_layer": {"stone": 4, "deepstone": 4, "voidstone": 3}, "max_per_row": 3}
+}
